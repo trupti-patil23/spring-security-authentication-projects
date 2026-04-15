@@ -45,7 +45,7 @@ It demonstrates real-world backend security concepts like authentication, author
 ---
 
 ### 📁 Project Structure
-
+```text
 AuthSphereSession/
 ├── src/main/java/com/authsphere/
 │ ├── AuthSphereApplication.java → Main Spring Boot app
@@ -79,7 +79,7 @@ AuthSphereSession/
 │
 ├── pom.xml
 └── README.md
-
+```
 ---
 
 ### 🔐 Authorization Rules
