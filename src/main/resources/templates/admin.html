@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ccc;
+            max-width: 500px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background-color: #b52a37;
+        }
+
+        .welcome {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div>Admin Panel</div>
+
+    <!-- logout using spring security -->
+    <form action="/logout" method="post" style="margin:0;">
+        <button type="submit" class="btn">Logout</button>
+    </form>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+    <div class="card">
+
+        <h2>Admin Dashboard</h2>
+
+        <p class="welcome"
+           th:text="'Welcome Admin, ' + ${username}">
+        </p>
+
+        <p>
+            You have full access to manage users, roles, and system configuration.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

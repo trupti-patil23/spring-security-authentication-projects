@@ -1,0 +1,67 @@
+package com.authsphere.service;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.authsphere.entity.User;
+import com.authsphere.repository.UserRepository;
+
+/**
+ * Custom implementation of UserDetailsService.
+ *
+ * Responsible for loading user information from the database
+ * and converting it into Spring Security's UserDetails object.
+ *
+ */
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+	
+
+    @Autowired
+    private UserRepository userRepository;
+
+
+    /**
+     * Loads user by username during login authentication.
+     *
+     * Steps:
+     * 1. Fetch user from database
+     * 2. Convert roles into GrantedAuthority
+     * 3. Return Spring Security User object
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Print DB info
+        System.out.println("USER> " + user.getUsername());
+        System.out.println("PASSWORD> " + user.getPassword());
+        System.out.println("ROLES> " + user.getRoles());
+
+        Set<SimpleGrantedAuthority> authorities = user.getRoles()
+            .stream()
+            .map(role -> {
+                // Ensure ROLE_ prefix exists
+                String roleName = role.getName();
+                if (!roleName.startsWith("ROLE_")) {
+                    roleName = "ROLE_" + roleName;
+                }
+                return new SimpleGrantedAuthority(roleName);
+            })
+            .collect(Collectors.toSet());
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorities
+        );
+    }
+}

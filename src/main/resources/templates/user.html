@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ccc;
+            max-width: 500px;
+        }
+
+        .welcome {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #b52a37;
+        }
+
+        .role {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div>User Dashboard</div>
+
+    <form action="/logout" method="post" style="margin:0;">
+        <button type="submit" class="btn">Logout</button>
+    </form>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+    <div class="card">
+
+        <div class="role">USER PANEL</div>
+
+        <h2>Dashboard</h2>
+
+        <p class="welcome"
+           th:text="'Hello, ' + ${username}">
+        </p>
+
+        <p>
+            Welcome to your dashboard. You can view your profile, access services, and manage your account here.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
