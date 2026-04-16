@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            text-align: center;
+            padding-top: 100px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            margin: auto;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #e74c3c;
+        }
+        p {
+            color: #555;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: white;
+            background-color: #3498db;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>⚠️ Something went wrong</h2>
+    
+    <p>We are unable to process your request at the moment.</p>
+    
+    <p>Please try again later.</p>
+
+    <a href="/login">Go to Login</a>
+</div>
+
+</body>
+</html>
