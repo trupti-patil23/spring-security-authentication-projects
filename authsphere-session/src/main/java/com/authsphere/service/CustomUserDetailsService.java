@@ -41,12 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Print DB info
-        System.out.println("USER> " + user.getUsername());
-        System.out.println("PASSWORD> " + user.getPassword());
-        System.out.println("ROLES> " + user.getRoles());
-
-        Set<SimpleGrantedAuthority> authorities = user.getRoles()
+            Set<SimpleGrantedAuthority> authorities = user.getRoles()
             .stream()
             .map(role -> {
                 // Ensure ROLE_ prefix exists
