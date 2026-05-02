@@ -60,6 +60,15 @@ public class GlobalExceptionHandler {
     }
     
     /**
+     * Handle refresh token errors
+     */
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<String> handleRefreshToken(InvalidRefreshTokenException ex) {
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    /**
      * Handles invalid login credential errors.     
      */
     @ExceptionHandler(InvalidCredentialsException.class)

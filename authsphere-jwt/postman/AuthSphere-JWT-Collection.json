@@ -64,10 +64,16 @@
               "script": {
                 "exec": [
                   "let res = pm.response.json();",
-                  "let token = (res.accessToken || '').trim();",
+                  "let accessToken = (res.accessToken || '').trim();",
                   "pm.collectionVariables.unset('user_token');",
-                  "pm.collectionVariables.set('user_token', token);",
-                  "console.log('USER TOKEN:', token);"
+                  "pm.collectionVariables.set('user_token', accessToken);",
+                  
+                   "let refreshToken = (res.refreshToken|| '').trim();",
+                  "pm.collectionVariables.unset('refresh_token');",
+                  "pm.collectionVariables.set('refresh_token', refreshToken);",
+                  
+                  "console.log('USER ACCESS TOKEN:', accessToken);",
+                  "console.log('USER REFRESH TOKEN:', refreshToken);"
                 ]
               }
             }
@@ -209,6 +215,141 @@
           }
         }
       ]
-    }
+    },
+    {
+      "name": "Refresh Token Flow",
+      "item": [
+        {
+          "name": "TC-REFRESH TOKEN - Generate New Access Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "text/plain" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{refresh_token}}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let res = pm.response.json();",
+                  "pm.collectionVariables.set('user_token', res.accessToken);",
+                  "console.log('ACCESS TOKEN REFRESHED SUCCESSFULLY');"
+                ]
+              }
+            }
+          ]
+        },
+
+        {
+          "name": "TC-REFRESH TOKEN INVALID",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "text/plain" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "invalid_refresh_token"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+   {
+	  "name": "Logout Flow",
+	  "item": [
+	    {
+	      "name": "TC-LOGOUT USER",
+	      "request": {
+	        "method": "POST",
+	        "header": [
+	          { "key": "Content-Type", "value": "application/json" }
+	        ],
+	        "url": {
+	          "raw": "{{base_url}}/api/auth/logout?username=user",
+	          "host": ["{{base_url}}"],
+	          "path": ["api", "auth", "logout"],
+	          "query": [
+	            {
+	              "key": "username",
+	              "value": "user"
+	            }
+	          ]
+	        }
+	      }
+	    },
+	    {
+	      "name": "TC-USER REFRESH AFTER LOGOUT (SHOULD FAIL)",
+	      "request": {
+	        "method": "POST",
+	        "header": [
+	          { "key": "Content-Type", "value": "text/plain" }
+	        ],
+	        "body": {
+	          "mode": "raw",
+	          "raw": "{{refresh_token}}"
+	        },
+	        "url": {
+	          "raw": "{{base_url}}/api/auth/refresh",
+	          "host": ["{{base_url}}"],
+	          "path": ["api", "auth", "refresh"]
+	        }
+	      }
+	    },
+	    {
+	      "name": "TC-LOGOUT ADMIN",
+	      "request": {
+	        "method": "POST",
+	        "header": [
+	          { "key": "Content-Type", "value": "application/json" }
+	        ],
+	        "url": {
+	          "raw": "{{base_url}}/api/auth/logout?username=admin",
+	          "host": ["{{base_url}}"],
+	          "path": ["api", "auth", "logout"],
+	          "query": [
+	            {
+	              "key": "username",
+	              "value": "admin"
+	            }
+	          ]
+	        }
+	      }
+	    },
+	    {
+	      "name": "TC-ADMIN REFRESH AFTER LOGOUT (SHOULD FAIL)",
+	      "request": {
+	        "method": "POST",
+	        "header": [
+	          { "key": "Content-Type", "value": "text/plain" }
+	        ],
+	        "body": {
+	          "mode": "raw",
+	          "raw": "{{refresh_token}}"
+	        },
+	        "url": {
+	          "raw": "{{base_url}}/api/auth/refresh",
+	          "host": ["{{base_url}}"],
+	          "path": ["api", "auth", "refresh"]
+	        }
+	      }
+	    }
+	  ]
+	}  
   ]
 }

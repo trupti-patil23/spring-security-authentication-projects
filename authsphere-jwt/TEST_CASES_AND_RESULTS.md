@@ -135,7 +135,8 @@ POST /api/auth/login
 
 ```json
 {
-    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzc3MDUxNTcxLCJleHAiOjE3NzcwNTUxNzF9.pgMWi8ApRMdA1vtX3Q3nfqrEmfyUiHNbIKNp6LaEB1w"
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzc3NjY4MDM3LCJleHAiOjE3Nzc2NzE2Mzd9.Iq2zTZWUjCDOEsfG_NMxyaTz-rc8k8sb640o2z03oyw",
+    "refreshToken": "faf7afb4-e329-4c17-bbb1-9f8be951f988"
 }
 ```
 
@@ -380,7 +381,8 @@ POST /api/auth/login
 
 ```json
 {
-    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc3NzA1MjM4OSwiZXhwIjoxNzc3MDU1OTg5fQ.T5Bb-9d3kKz7-q-axU8fyBDiCUfbo3WqaJV9PF9AX94"
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc3NzY2ODc2MiwiZXhwIjoxNzc3NjcyMzYyfQ.qrjfMJGptmYXRNSCmED7XQtNtKXfq9Gb90Te6bHKYbQ",
+    "refreshToken": "ed8ec541-37ed-4425-be56-3f2fe5214e74"
 }
 ```
 
@@ -449,7 +451,201 @@ Authorization: Bearer <admin_token>
 ```text
 User profile data - Access granted
 ```
+---
 
+# 🔐 4. REFRESH TOKEN FLOW
+
+## ✅ TC-19: Refresh Token → Generate New Access Token
+
+### Request
+```http
+POST /api/auth/refresh
+```
+
+```
+{{refresh_token}}
+```
+
+### Response
+```http
+200 OK
+```
+
+```json
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzc3NzU3NTgzLCJleHAiOjE3Nzc3NjExODN9.MQEzmSiDlwAJM5v6TjuTqy9PvbBD1wR4ezc98GCy90U",
+    "refreshToken": "f246da8b-773a-4ac9-b2c2-cf0a2358a587"
+}
+```
+
+---
+
+## ❌ TC-20: Refresh Token Invalid
+
+### Request
+```
+invalid_refresh_token
+```
+
+### Response
+```http
+401 UNAUTHORIZED
+```
+
+```
+Invalid refresh token
+
+```
+
+---
+
+## ❌ TC-21: Refresh Token Expired / Deleted
+
+### Scenario
+Token removed from DB (logout or expiry)
+
+### Request
+```
+{{refresh_token}}
+```
+
+### Response
+```http
+401 UNAUTHORIZED
+```
+
+```
+Invalid refresh token
+
+```
+
+---
+
+## 🔐 TC-22: USER Refresh After Logout (Should Fail)
+
+### Pre-condition
+- User logs in  
+- User logs out  
+
+### Request
+```
+{{refresh_token}}
+```
+
+### Response
+```http
+401 UNAUTHORIZED
+```
+
+```
+Invalid refresh token
+
+```
+
+---
+
+## 🔐 TC-23: ADMIN Refresh After Logout (Should Fail)
+
+### Pre-condition
+- Admin logs in  
+- Admin logs out  
+
+### Request
+```
+{{admin_refresh_token}}
+```
+
+### Response
+```http
+401 UNAUTHORIZED
+```
+
+```
+Invalid refresh token
+
+```
+
+---
+
+# 🚪 5. LOGOUT FLOW
+
+## ✅ TC-24: Logout User (Success)
+
+### Request
+```http
+POST /api/auth/logout?username=user
+```
+
+### Response
+```http
+200 OK
+```
+
+```
+Logged out successfully
+```
+
+---
+
+## ✅ TC-25: Logout Admin (Success)
+
+### Request
+```http
+POST /api/auth/logout?username=admin
+```
+
+### Response
+```http
+200 OK
+```
+
+```
+Logged out successfully
+```
+
+---
+
+## 🔥 TC-26: Verify Refresh Token After Logout (User)
+
+### Scenario
+User logs out → refresh token reused
+
+### Request
+```
+{{refresh_token}}
+```
+
+### Response
+```http
+401 UNAUTHORIZED
+```
+
+```
+Invalid refresh token
+
+```
+
+---
+
+## 🔥 TC-27: Verify Refresh Token After Logout (Admin)
+
+### Scenario
+Admin logs out → refresh token reused
+
+### Request
+```
+{{admin_refresh_token}}
+```
+
+### Response
+```http
+401 UNAUTHORIZED
+```
+
+```
+Invalid refresh token
+
+```
 ---
 
 # 🧠 STATUS CODE SUMMARY

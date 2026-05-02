@@ -3,6 +3,7 @@ package com.authspherejwt.security;
 import java.security.Key;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.authspherejwt.exception.InvalidTokenException;
@@ -25,12 +26,19 @@ import io.jsonwebtoken.security.Keys;
  */
 @Service
 public class JwtService {
-
+	
     /**
      * Secret key used to sign JWT tokens.
      *      
      */
     private static final String SECRET_KEY = "my-secret-key-my-secret-key-my-secret-key";
+    
+    /**
+     * JWT access token expiration time (in milliseconds) loaded from application.properties for configurable security
+     */
+    @Value("${jwt.access-token-expiration}")
+    private long accessTokenExpiration;
+
 
     /**
      * Generates JWT token for a given username.
@@ -42,7 +50,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(username) // payload → identifies the user
                 .setIssuedAt(new Date(System.currentTimeMillis())) // token creation time
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour expiry
+                .setExpiration(new Date(System.currentTimeMillis() +  accessTokenExpiration)) 
                 .signWith(getSignKey(), SignatureAlgorithm.HS256) // signing algorithm + key
                 .compact();
     }
